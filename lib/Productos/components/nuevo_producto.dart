@@ -25,7 +25,7 @@ import '../../global/text_field.dart';
 import '../../services/http.dart';
 import '../productos.dart';
 
-class NuevoProducto extends StatefulWidget {
+class NuevoProducto extends StatefulWidget { 
   final List<dynamic>? coloresGet;
   final List<dynamic>? tallasGet;
   final List<dynamic>? marcasGet;
@@ -127,6 +127,7 @@ Color? colorS;
 class _NuevoProductoState extends State<NuevoProducto> {
   @override
   void initState() {
+    getData();
     if (widget.isEdit == true) {
       //initSt();
     }
@@ -147,96 +148,127 @@ class _NuevoProductoState extends State<NuevoProducto> {
       }
     }
 
+    tallasBusc.clear();
     if (auxGetTallas!.isEmpty) {
       for (var i in widget.tallasGet!) {
-        tallasBusc.add(i['name']);
+        tallasBusc.add(i['size']);
       }
     } else {
       for (var i in auxGetTallas!) {
-        tallasBusc.add(i['name']);
+        print("Entrando for Tallas");
+        tallasBusc.add(i['size']);
       }
     }
 
+    marcasBusc.clear();
     if (auxGetMarcas!.isEmpty) {
       for (var i in widget.marcasGet!) {
         marcasBusc.add(i['name']);
       }
     } else {
       for (var i in auxGetMarcas!) {
+        print("Entrando for Marcas");
         marcasBusc.add(i['name']);
       }
     }
 
+    categoriasBusc.clear();
     if (auxGetCategorias!.isEmpty) {
       for (var i in widget.categoriasGet!) {
-        categoriasBusc.add(i['name']);
+        categoriasBusc.add(i['category']);
       }
     } else {
       for (var i in auxGetCategorias!) {
-        categoriasBusc.add(i['name']);
+        print("Entrando for Categorias");
+        categoriasBusc.add(i['category']);
       }
     }
 
-    if (auxGetTags!.isEmpty) {
-      for (var i in widget.tagsGet!) {
-        tagsBusc.add(i['name']);
-      }
-    } else {
-      for (var i in auxGetTags!) {
-        tagsBusc.add(i['name']);
-      }
-    }
+    // if (auxGetTags!.isEmpty) {
+    //   for (var i in widget.tagsGet!) {
+    //     tagsBusc.add(i['name']);
+    //   }
+    // } else {
+    //   for (var i in auxGetTags!) {
+    //     tagsBusc.add(i['name']);
+    //   }
+    // }
 
     if (auxGetdescripciones!.isEmpty) {
       for (var i in widget.descripGet!) {
-        descripBusc.add(i['name']);
+        descripBusc.add(i['description']);
       }
     } else {
       for (var i in auxGetdescripciones!) {
-        descripBusc.add(i['name']);
+        descripBusc.add(i['description']);
       }
     }
+  }
+
+  getData() async{
+    print('si');
+    await getColores();
+    await getMarcas();
+    await getCategorias();
+    await getTallas();
+    await getDescripciones();
+    print("colores: $colores");
   }
 
   getColores() async {
     colores = jsonDecode(await urlServiceGet("colors"));
-    auxGetColores = colores['colores'];
-    print("colores:");
-    print(colores);
+    auxGetColores = colores['colors'];
+    // print("colores:");
+    // print(colores);
+    // print("auxGetColores:");
+    // print(auxGetColores);
     initSt();
   }
 
   getTallas() async {
-    urlServiceGet("talla/obtener");
-    tallas = jsonDecode(await urlServiceGet("talla/obtener"));
-    auxGetTallas = tallas['tallas'];
+    tallas = jsonDecode(await urlServiceGet("sizes"));
+    auxGetTallas = tallas['sizes'];
+    // print("tallas:");
+    // print(tallas);
+    // print("auxGetTallas:");
+    // print(auxGetTallas);
     initSt();
   }
 
   getMarcas() async {
     marcas = jsonDecode(await urlServiceGet("brands"));
-    auxGetMarcas = marcas['clients'];
+    auxGetMarcas = marcas['brands'];
+    // print("marcas:");
+    // print(marcas);
+    // print("auxGetMarcas:");
+    // print(auxGetMarcas);
     initSt();
   }
 
   getCategorias() async {
-    urlServiceGet("categoria/obtener");
-    categorias = jsonDecode(await urlServiceGet("categoria/obtener"));
-    auxGetCategorias = categorias['categorias'];
+    categorias = jsonDecode(await urlServiceGet("category"));
+    auxGetCategorias = categorias['category'];
+    // print("categorias:");
+    // print(categorias);
+    // print("auxGetCategorias:");
+    // print(auxGetCategorias);
     initSt();
   }
 
-  getTags() async {
-    urlServiceGet("tags/obtener");
-    gTags = jsonDecode(await urlServiceGet("tags/obtener"));
-    auxGetTags = gTags['tags'];
-    initSt();
-  }
+  // getTags() async {
+  //   urlServiceGet("tags/obtener");
+  //   gTags = jsonDecode(await urlServiceGet("tags/obtener"));
+  //   auxGetTags = gTags['tags'];
+  //   initSt();
+  // }
 
   getDescripciones() async {
-    urlServiceGet("descripciones/obtener");
-    descripciones = jsonDecode(await urlServiceGet("descripciones/obtener"));
-    auxGetdescripciones = descripciones['descripciones'];
+    descripciones = jsonDecode(await urlServiceGet("information"));
+    auxGetdescripciones = descripciones['information'];
+    // print("descripciones:");
+    // print(descripciones);
+    // print("auxGetdescripciones:");
+    // print(auxGetdescripciones);
     //print(auxGetdescripciones);
     initSt();
   }
@@ -932,7 +964,7 @@ class _NuevoProductoState extends State<NuevoProducto> {
                   print(crearMarca.toString());
                   urlServicePost('tags/crear', crearMarca)
                       .whenComplete(() => setState(() {
-                            getTags();
+                            // getTags();
                             _tallaController.text = "";
                             Navigator.of(context).pop();
                           }));
